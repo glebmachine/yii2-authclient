@@ -89,4 +89,33 @@ class Twitter extends OAuth1
     {
         return 'Twitter';
     }
+
+    /**
+     * @inheritdoc
+     */
+    protected function defaultTitle()
+    {
+        return 'Twitter';
+    }
+
+    protected function defaultNormalizeUserAttributeMap()
+    {
+        return [
+            'id' => 'user_id',
+        ];
+    }
+
+    /**
+     * @return OAuthToken auth token instance.
+     */
+    public function getAccessToken()
+    {
+        $at = parent::getAccessToken();
+        if (is_object($at)) {
+          $at->setParam('access_token', $at->getParam('oauth_token'));
+          $at->setParam('refresh_token', $at->getParam('oauth_token_secret'));
+        }
+
+        return $at;
+    }
 }
